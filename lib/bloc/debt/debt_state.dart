@@ -4,6 +4,9 @@ abstract class DebtState extends Equatable {
   const DebtState();
 }
 
+//Todo: Add status to state
+// enum DebtStatus{ success, added, removed}
+
 class DebtInitial extends DebtState {
   @override
   List<Object> get props => [];

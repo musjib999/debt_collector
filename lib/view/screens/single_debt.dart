@@ -14,7 +14,9 @@ class SingleDebt extends StatelessWidget {
           PopupMenuButton<DebtMenuItem>(
             onSelected: (value) {
               if (value == DebtMenuItem.edit) {
-              } else if (value == DebtMenuItem.delete) {}
+              } else if (value == DebtMenuItem.delete) {
+                si.debtService.deleteDebt(context: context, debt: debt);
+              }
             },
             itemBuilder: (context) {
               return const [
@@ -36,22 +38,19 @@ class SingleDebt extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  debt.debtor,
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  '₦${si.utilityService.numberFormatter(debt.amount)}',
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-              ],
+            Text(
+              debt.debtor,
+              style: const TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 6.h),
+            DebtInfoContainer(
+              title: 'Amount',
+              info: '₦${si.utilityService.numberFormatter(debt.amount)}',
+              color: Colors.green,
+              icon: Icons.attach_money_outlined,
+            ),
+            SizedBox(height: 4.h),
             DebtInfoContainer(
               title: 'Date',
               info: '${debt.date.day}/${debt.date.month}/${debt.date.year}',
