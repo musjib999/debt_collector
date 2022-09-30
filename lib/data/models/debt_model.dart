@@ -5,7 +5,6 @@ class DebtModel {
     required this.debtor,
     required this.amount,
     required this.date,
-    required this.paid,
     required this.item,
     required this.description,
   });
@@ -13,7 +12,6 @@ class DebtModel {
   final String debtor;
   final double amount;
   final DateTime date;
-  final bool paid;
   final String item;
   final String description;
 
@@ -25,7 +23,6 @@ class DebtModel {
     debtor: json["Debtor"],
     amount: json["amount"].toDouble(),
     date: DateTime.parse(json["date"]),
-    paid: json["paid"],
     item: json["item"],
     description: json["description"],
   );
@@ -34,7 +31,6 @@ class DebtModel {
     "Debtor": debtor,
     "amount": amount,
     "date": "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
-    "paid": paid,
     "item": item,
     "description": description,
   };

@@ -1,3 +1,4 @@
+import 'package:debt_collector/core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -34,7 +35,7 @@ class DebtCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'N$totalDebt',
+                  '₦${si.utilityService.numberFormatter(totalDebt)}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 19.sp,

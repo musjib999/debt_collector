@@ -17,21 +17,22 @@ class DebtService{
     return debts;
   }
 
-  Future<DebtModel> addDebt({required BuildContext context, required String name, required double amount, required DateTime date, required bool paid, required String item, String? description})async{
+  Future<DebtModel> addDebt({required BuildContext context, required String name, required double amount, required DateTime date, required String item, String? description})async{
     List<DebtModel> debts = [];
     DebtModel? addedDebt;
     final savedDebts = await localData.getListFromSharedPreference(key: 'debts');
     if(savedDebts == null){
-      addedDebt = DebtModel(debtor: name, amount: amount, date: date, paid: paid, item: item, description: description ?? '');
+      addedDebt = DebtModel(debtor: name, amount: amount, date: date, item: item, description: description ?? '');
       debts.add(addedDebt);
       await localData.addListToSharedPreference(key: 'debts', value: debts.map((e) => e.toRawJson()).toList());
     }else{
       debts = savedDebts.map((e) => DebtModel.fromRawJson(e)).toList();
-      addedDebt = DebtModel(debtor: name, amount: amount, date: date, paid: paid, item: item, description: description ?? '');
+      addedDebt = DebtModel(debtor: name, amount: amount, date: date, item: item, description: description ?? '');
       debts.add(addedDebt);
       await localData.addListToSharedPreference(key: 'debts', value: debts.map((e) => e.toRawJson()).toList());
     }
     context.read<DebtBloc>().add(DebtSuccessEvent(debts: debts));
+    getTotalDebt(context: context);
     return addedDebt;
   }
 
