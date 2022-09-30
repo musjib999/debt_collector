@@ -24,9 +24,7 @@ class MyApp extends StatelessWidget {
         builder: (context, orientation, deviceType) {
           return MaterialApp(
             title: 'Debt Collector',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: appTheme,
             home: const AllDebts(),
           );
         }
