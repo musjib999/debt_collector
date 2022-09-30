@@ -1,3 +1,4 @@
+import 'package:debt_collector/bloc/balance/balance_bloc.dart';
 import 'package:debt_collector/bloc/debt/debt_bloc.dart';
 import 'package:debt_collector/data/data.dart';
 import 'package:flutter/material.dart';
@@ -32,5 +33,20 @@ class DebtService{
     }
     context.read<DebtBloc>().add(DebtSuccessEvent(debts: debts));
     return addedDebt;
+  }
+
+  Future getTotalDebt({required BuildContext context})async{
+    double total = 0.0;
+    final savedDebts = await localData.getListFromSharedPreference(key: 'debts');
+    if(savedDebts == null){
+      total = 0.0;
+    }else{
+     List<DebtModel> debts = savedDebts.map((e) => DebtModel.fromRawJson(e)).toList();
+     for(DebtModel debt in debts){
+       total = total + debt.amount;
+     }
+    }
+    context.read<BalanceBloc>().add(BalanceSuccessEvent(totalDebt: total));
+    return total;
   }
 }

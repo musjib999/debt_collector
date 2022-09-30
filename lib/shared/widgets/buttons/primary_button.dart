@@ -1,4 +1,4 @@
-import 'package:argon_buttons_flutter/argon_buttons_flutter.dart';
+import 'package:argon_buttons_flutter_fix/argon_buttons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class PrimaryButton extends StatelessWidget {
