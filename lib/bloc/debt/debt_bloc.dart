@@ -12,7 +12,19 @@ class DebtBloc extends Bloc<DebtEvent, DebtState> {
     });
 
     on<DebtSuccessEvent>((event, emit){
-      emit(DebtLoaded(debts: event.debts));
+      emit(DebtLoaded(debts: event.debts, status: DebtStatus.success));
+    });
+
+    on<AddDebtEvent>((event, emit){
+      emit(DebtLoaded(debts: event.addedDebts, status: DebtStatus.added));
+    });
+
+    on<RemoveDebtEvent>((event, emit){
+      emit(DebtLoaded(debts: event.newDebts, status: DebtStatus.removed));
+    });
+
+    on<EditDebtEvent>((event, emit){
+      emit(DebtLoaded(debts: event.editedDebts, status: DebtStatus.edit));
     });
   }
 }

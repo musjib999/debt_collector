@@ -31,7 +31,7 @@ class DebtService{
       debts.add(addedDebt);
       await localData.addListToSharedPreference(key: 'debts', value: debts.map((e) => e.toRawJson()).toList());
     }
-    context.read<DebtBloc>().add(DebtSuccessEvent(debts: debts));
+    context.read<DebtBloc>().add(AddDebtEvent(addedDebts: debts));
     getTotalDebt(context: context);
     return addedDebt;
   }
@@ -57,9 +57,28 @@ class DebtService{
       savedDebts.remove(debt.toRawJson());
       await localData.addListToSharedPreference(key: 'debts', value: savedDebts);
       List<DebtModel> debts = savedDebts.map((e) => DebtModel.fromRawJson(e)).toList();
-      context.read<DebtBloc>().add(DebtSuccessEvent(debts: debts));
+      context.read<DebtBloc>().add(RemoveDebtEvent(newDebts: debts));
       getTotalDebt(context: context);
     }
     return debt;
   }
+
+  Future editDebt({required BuildContext context, required DebtModel debt, required String name, required double amount})async{
+    List<DebtModel> allDebts = [];
+    final savedDebts = await localData.getListFromSharedPreference(key: 'debts');
+    if(savedDebts != null){
+      for(String singleDebt in savedDebts){
+        if(singleDebt == debt.toRawJson()){
+          DebtModel editedDebt = DebtModel(debtor: name, amount: amount, date: debt.date, item: debt.item, description: debt.description);
+          allDebts.add(editedDebt);
+        }else{
+          allDebts.add(DebtModel.fromRawJson(singleDebt));
+        }
+      }
+    }
+    await localData.addListToSharedPreference(key: 'debts', value: allDebts.map((e) => e.toRawJson()).toList());
+    context.read<DebtBloc>().add(EditDebtEvent(editedDebts: allDebts));
+    getTotalDebt(context: context);
+  }
+
 }
