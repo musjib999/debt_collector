@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:debt_collector/bloc/balance/balance_bloc.dart';
 import 'package:debt_collector/bloc/debt/debt_bloc.dart';
 import 'package:debt_collector/index.dart';
@@ -22,10 +23,18 @@ class MyApp extends StatelessWidget {
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
-          return MaterialApp(
-            title: 'Debt Collector',
-            theme: appTheme,
-            home: const AllDebts(),
+          return AdaptiveTheme(
+            light: lightTheme,
+            dark: darkTheme,
+            initial: AdaptiveThemeMode.light,
+            builder: (ThemeData light, ThemeData dark) {
+              return MaterialApp(
+                title: 'Debt Collector',
+                theme: light,
+                darkTheme: dark,
+                home: const AllDebts(),
+              );
+            },
           );
         }
       ),

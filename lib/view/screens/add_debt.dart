@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:debt_collector/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -26,12 +29,14 @@ class _AddDebtState extends State<AddDebt> {
       body: BlocListener<DebtBloc, DebtState>(
         listener: (context, state) {
           if (state is DebtLoaded) {
-            si.dialogService.showSuccessSnackBar(
-                context: context, message: 'Debt Added successfully');
-            name.clear();
-            amount.clear();
-            item.clear();
-            selectedDate = null;
+            if (state.status == DebtStatus.added) {
+              si.dialogService.showSuccessSnackBar(
+                  context: context, message: 'Debt Added successfully');
+              name.clear();
+              amount.clear();
+              item.clear();
+              selectedDate = null;
+            }
           }
         },
         child: SingleChildScrollView(
@@ -42,9 +47,9 @@ class _AddDebtState extends State<AddDebt> {
                 TextFormField(
                   controller: name,
                   decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outline),
-                      hintText: 'Debtor',
-                      border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person_outline),
+                    hintText: 'Debtor',
+                    border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 12.0),
@@ -60,11 +65,34 @@ class _AddDebtState extends State<AddDebt> {
                 const SizedBox(height: 12.0),
                 GestureDetector(
                   onTap: () {
-                    si.utilityService.selectDate(context).then((value) {
-                      setState(() {
-                        selectedDate = value;
+                    if(Platform.isIOS){
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (BuildContext builder) {
+                              return Container(
+                                height: MediaQuery.of(context).copyWith().size.height*0.25,
+                                color: Colors.white,
+                                child: CupertinoDatePicker(
+                                  mode: CupertinoDatePickerMode.date,
+                                  onDateTimeChanged: (value) {
+                                    setState((){
+                                      selectedDate = value;
+                                    });
+                                  },
+                                  initialDateTime: DateTime.now(),
+                                  minimumYear: 1999,
+                                  maximumDate: DateTime.now(),
+                                ),
+                              );
+                            }
+                        );
+                    }else {
+                      si.utilityService.selectDate(context).then((value) {
+                        setState(() {
+                          selectedDate = value;
+                        });
                       });
-                    });
+                    }
                   },
                   child: DatePickerForm(
                     hintText: selectedDate == null
@@ -107,37 +135,4 @@ class _AddDebtState extends State<AddDebt> {
   }
 }
 
-class DatePickerForm extends StatelessWidget {
-  final String hintText;
-  const DatePickerForm({Key? key, required this.hintText}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 15.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey.shade500,
-        ),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.calendar_month,
-            color: Colors.grey.shade600,
-          ),
-          SizedBox(width: 10.sp),
-          Text(
-            hintText,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 15.5,
-              color: Colors.grey.shade700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

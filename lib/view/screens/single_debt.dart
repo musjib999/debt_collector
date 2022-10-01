@@ -1,9 +1,14 @@
 import 'package:debt_collector/index.dart';
+import 'package:debt_collector/view/screens/edit_debt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../bloc/debt/debt_bloc.dart';
 
 class SingleDebt extends StatelessWidget {
   final DebtModel debt;
+
   const SingleDebt({Key? key, required this.debt}) : super(key: key);
 
   @override
@@ -14,7 +19,9 @@ class SingleDebt extends StatelessWidget {
           PopupMenuButton<DebtMenuItem>(
             onSelected: (value) {
               if (value == DebtMenuItem.edit) {
-              } else if (value == DebtMenuItem.delete) {
+                si.routerService.nextRoute(context, EditDebt(debt: debt));
+              } else
+              if (value == DebtMenuItem.delete) {
                 si.debtService.deleteDebt(context: context, debt: debt);
               }
             },
@@ -33,38 +40,50 @@ class SingleDebt extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        margin: EdgeInsets.all(12.sp),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              debt.debtor,
-              style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 6.h),
-            DebtInfoContainer(
-              title: 'Amount',
-              info: '₦${si.utilityService.numberFormatter(debt.amount)}',
-              color: Colors.green,
-              icon: Icons.attach_money_outlined,
-            ),
-            SizedBox(height: 4.h),
-            DebtInfoContainer(
-              title: 'Date',
-              info: '${debt.date.day}/${debt.date.month}/${debt.date.year}',
-              color: Colors.blue,
-              icon: Icons.calendar_month,
-            ),
-            SizedBox(height: 4.h),
-            DebtInfoContainer(
-              title: 'Item',
-              info: debt.item,
-              color: Colors.orange,
-              icon: Icons.perm_identity,
-            ),
-          ],
+      body: BlocListener<DebtBloc, DebtState>(
+        listener: (context, state) {
+          if(state is DebtLoaded){
+            if(state.status == DebtStatus.removed){
+              si.dialogService.showSuccessSnackBar(
+                  context: context, message: 'Debt Removed successfully',
+              );
+              si.routerService.popRoute(context);
+            }
+          }
+        },
+        child: Container(
+          margin: EdgeInsets.all(12.sp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                debt.debtor,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: 6.h),
+              DebtInfoContainer(
+                title: 'Amount',
+                info: '₦${si.utilityService.numberFormatter(debt.amount)}',
+                color: Colors.green,
+                icon: Icons.attach_money_outlined,
+              ),
+              SizedBox(height: 4.h),
+              DebtInfoContainer(
+                title: 'Date',
+                info: '${debt.date.day}/${debt.date.month}/${debt.date.year}',
+                color: Colors.blue,
+                icon: Icons.calendar_month,
+              ),
+              SizedBox(height: 4.h),
+              DebtInfoContainer(
+                title: 'Item',
+                info: debt.item,
+                color: Colors.orange,
+                icon: Icons.perm_identity,
+              ),
+            ],
+          ),
         ),
       ),
     );
