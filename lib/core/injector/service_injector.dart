@@ -4,6 +4,7 @@ class ServiceInjector{
   DebtService debtService = DebtService();
   RouterService routerService = RouterService();
   DialogService dialogService = DialogService();
+  UtilityService utilityService= UtilityService();
 }
 
 ServiceInjector si = ServiceInjector();

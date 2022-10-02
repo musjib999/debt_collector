@@ -1,7 +1,10 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:debt_collector/bloc/balance/balance_bloc.dart';
 import 'package:debt_collector/bloc/debt/debt_bloc.dart';
 import 'package:debt_collector/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +16,27 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => DebtBloc(),
-      child: MaterialApp(
-        title: 'Debt Collector',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const AllDebts(),
+    return MultiBlocProvider(
+      providers:[
+        BlocProvider(create: (context) => DebtBloc()),
+        BlocProvider(create: (context) => BalanceBloc()),
+      ],
+      child: Sizer(
+        builder: (context, orientation, deviceType) {
+          return AdaptiveTheme(
+            light: lightTheme,
+            dark: darkTheme,
+            initial: AdaptiveThemeMode.light,
+            builder: (ThemeData light, ThemeData dark) {
+              return MaterialApp(
+                title: 'Debt Collector',
+                theme: light,
+                darkTheme: dark,
+                home: const AllDebts(),
+              );
+            },
+          );
+        }
       ),
     );
   }

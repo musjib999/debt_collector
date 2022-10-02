@@ -1,0 +1,3 @@
+enum DebtMenuItem {
+  edit, delete
+}

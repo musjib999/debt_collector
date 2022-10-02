@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:debt_collector/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../bloc/debt/debt_bloc.dart';
 
@@ -15,7 +20,7 @@ class _AddDebtState extends State<AddDebt> {
   TextEditingController name = TextEditingController();
   TextEditingController amount = TextEditingController();
   TextEditingController item = TextEditingController();
-  bool hasPaid = false;
+  DateTime? selectedDate;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +29,15 @@ class _AddDebtState extends State<AddDebt> {
       ),
       body: BlocListener<DebtBloc, DebtState>(
         listener: (context, state) {
-          if(state is DebtLoaded){
-            si.dialogService.showSuccessSnackBar(context: context, message: 'Debt Added successfully');
-            name.clear();
-            amount.clear();
-            item.clear();
-            hasPaid = false;
+          if (state is DebtLoaded) {
+            if (state.status == DebtStatus.added) {
+              si.dialogService.showSuccessSnackBar(
+                  context: context, message: 'Debt Added successfully');
+              name.clear();
+              amount.clear();
+              item.clear();
+              selectedDate = null;
+            }
           }
         },
         child: SingleChildScrollView(
@@ -39,14 +47,17 @@ class _AddDebtState extends State<AddDebt> {
               children: [
                 TextFormField(
                   controller: name,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outline),
-                      hintText: 'Debtor',
-                      border: OutlineInputBorder()),
+                    prefixIcon: Icon(Icons.person_outline),
+                    hintText: 'Debtor',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
                 const SizedBox(height: 12.0),
                 TextFormField(
                   controller: amount,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.attach_money_outlined),
                     hintText: 'Amount',
@@ -55,46 +66,47 @@ class _AddDebtState extends State<AddDebt> {
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 12.0),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.calendar_month),
-                    hintText: 'Date',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey.shade500,
-                    ),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Paid',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15.5,
-                            color: Colors.grey.shade700),
-                      ),
-                      Checkbox(
-                          value: hasPaid,
-                          onChanged: (value) {
-                            setState(() {
-                              hasPaid = value!;
-                            });
-                          }),
-                    ],
+                GestureDetector(
+                  onTap: () {
+                    if(Platform.isIOS){
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (BuildContext builder) {
+                              return Container(
+                                height: MediaQuery.of(context).copyWith().size.height*0.25,
+                                color: Colors.white,
+                                child: CupertinoDatePicker(
+                                  mode: CupertinoDatePickerMode.date,
+                                  onDateTimeChanged: (value) {
+                                    setState((){
+                                      selectedDate = value;
+                                    });
+                                  },
+                                  initialDateTime: DateTime.now(),
+                                  minimumYear: 1999,
+                                  maximumDate: DateTime.now(),
+                                ),
+                              );
+                            }
+                        );
+                    }else {
+                      si.utilityService.selectDate(context).then((value) {
+                        setState(() {
+                          selectedDate = value;
+                        });
+                      });
+                    }
+                  },
+                  child: DatePickerForm(
+                    hintText: selectedDate == null
+                        ? 'Date'
+                        : '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}',
                   ),
                 ),
                 const SizedBox(height: 12.0),
                 TextFormField(
                   controller: item,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.card_travel),
                     hintText: 'item',
@@ -102,19 +114,21 @@ class _AddDebtState extends State<AddDebt> {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                PrimaryButton(
-                  title: 'Add',
-                  onTap: (startLoading, stopLoading, btnState) {
-                    startLoading();
-                    si.debtService.addDebt(
+                SizedBox(
+                  width: 100.w,
+                  height: 6.5.h,
+                  child: ElevatedButton(
+                    child: const Text('Add'),
+                    onPressed: () {
+                      si.debtService.addDebt(
                         name: name.text,
                         amount: double.parse(amount.text),
-                        date: DateTime.now(),
-                        paid: hasPaid,
-                        item: 'Money',
-                        context: context);
-                    stopLoading();
-                  },
+                        date: selectedDate!,
+                        item: item.text,
+                        context: context,
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -124,3 +138,5 @@ class _AddDebtState extends State<AddDebt> {
     );
   }
 }
+
+
