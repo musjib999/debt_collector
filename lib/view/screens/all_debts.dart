@@ -6,6 +6,7 @@ import 'package:debt_collector/view/screens/single_debt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AllDebts extends StatefulWidget {
   const AllDebts({Key? key}) : super(key: key);
@@ -66,13 +67,20 @@ class _AllDebtsState extends State<AllDebts> {
                 if (state is DebtLoaded) {
                   if (state.status == DebtStatus.success) {
                     return state.debts.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No Debt',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700),
-                            ),
-                          )
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset('assets/svg/empty.svg', height: 30.h,),
+                            SizedBox(height: 12.sp),
+                            const Center(
+                                child: Text(
+                                  'No Debt',
+                                  style: TextStyle(
+                                      fontSize: 18, fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                          ],
+                        )
                         : ListView.builder(
                             itemCount: state.debts.length,
                             itemBuilder: (context, index) {
@@ -140,46 +148,53 @@ class _AllDebtsState extends State<AllDebts> {
                           elevation: 2,
                           margin: EdgeInsets.symmetric(
                               horizontal: 4.sp, vertical: 6.5.sp),
-                          child: ListTile(
-                            onTap: () {
-                              si.routerService.nextRoute(
-                                context,
-                                SingleDebt(
-                                  debt: state.debts[index],
-                                ),
-                              );
-                            },
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  state.debts[index].debtor,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                            child: ListTile(
+                              onTap: () {
+                                si.routerService.nextRoute(
+                                  context,
+                                  SingleDebt(
+                                    debt: state.debts[index],
                                   ),
-                                ),
-                                SizedBox(height: 8.sp),
-                                Text(
-                                  state.debts[index].item,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                            trailing: Column(
-                              children: [
-                                Text(
-                                  '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                SizedBox(height: 8.sp),
-                                Text(
-                                  '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                                );
+                              },
+                              title: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.debts[index].debtor,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.sp),
+                                  Text(
+                                    state.debts[index].item,
+                                    style:
+                                    const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              trailing: Column(
+                                children: [
+                                  Text(
+                                    '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  SizedBox(height: 8.sp),
+                                  Text(
+                                    '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
+                                    style:
+                                    const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -187,13 +202,20 @@ class _AllDebtsState extends State<AllDebts> {
                     );
                   } else if (state.status == DebtStatus.removed) {
                     return state.debts.isEmpty
-                        ? const Center(
-                            child: Text(
-                              'No Debt',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w700),
-                            ),
-                          )
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset('assets/svg/empty.svg', height: 30.h,),
+                        SizedBox(height: 12.sp),
+                        const Center(
+                          child: Text(
+                            'No Debt',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    )
                         : ListView.builder(
                             itemCount: state.debts.length,
                             itemBuilder: (context, index) {
@@ -201,50 +223,53 @@ class _AllDebtsState extends State<AllDebts> {
                                 elevation: 2,
                                 margin: EdgeInsets.symmetric(
                                     horizontal: 4.sp, vertical: 6.5.sp),
-                                child: ListTile(
-                                  onTap: () {
-                                    si.routerService.nextRoute(
-                                      context,
-                                      SingleDebt(
-                                        debt: state.debts[index],
-                                      ),
-                                    );
-                                  },
-                                  title: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        state.debts[index].debtor,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                          color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                                  child: ListTile(
+                                    onTap: () {
+                                      si.routerService.nextRoute(
+                                        context,
+                                        SingleDebt(
+                                          debt: state.debts[index],
                                         ),
-                                      ),
-                                      SizedBox(height: 8.sp),
-                                      Text(
-                                        state.debts[index].item,
-                                        style:
-                                            const TextStyle(color: Colors.grey),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Column(
-                                    children: [
-                                      Text(
-                                        '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      SizedBox(height: 8.sp),
-                                      Text(
-                                        '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
-                                        style:
-                                            const TextStyle(color: Colors.grey),
-                                      ),
-                                    ],
+                                      );
+                                    },
+                                    title: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          state.debts[index].debtor,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                          ),
+                                        ),
+                                        SizedBox(height: 8.sp),
+                                        Text(
+                                          state.debts[index].item,
+                                          style:
+                                          const TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      children: [
+                                        Text(
+                                          '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        SizedBox(height: 8.sp),
+                                        Text(
+                                          '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
+                                          style:
+                                          const TextStyle(color: Colors.grey),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -258,46 +283,53 @@ class _AllDebtsState extends State<AllDebts> {
                           elevation: 2,
                           margin: EdgeInsets.symmetric(
                               horizontal: 4.sp, vertical: 6.5.sp),
-                          child: ListTile(
-                            onTap: () {
-                              si.routerService.nextRoute(
-                                context,
-                                SingleDebt(
-                                  debt: state.debts[index],
-                                ),
-                              );
-                            },
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  state.debts[index].debtor,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 6.0),
+                            child: ListTile(
+                              onTap: () {
+                                si.routerService.nextRoute(
+                                  context,
+                                  SingleDebt(
+                                    debt: state.debts[index],
                                   ),
-                                ),
-                                SizedBox(height: 8.sp),
-                                Text(
-                                  state.debts[index].item,
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                            trailing: Column(
-                              children: [
-                                Text(
-                                  '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                SizedBox(height: 8.sp),
-                                Text(
-                                  '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                                );
+                              },
+                              title: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    state.debts[index].debtor,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.sp),
+                                  Text(
+                                    state.debts[index].item,
+                                    style:
+                                    const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              trailing: Column(
+                                children: [
+                                  Text(
+                                    '₦${si.utilityService.numberFormatter(state.debts[index].amount)}',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  SizedBox(height: 8.sp),
+                                  Text(
+                                    '${state.debts[index].date.day}/${state.debts[index].date.month}/${state.debts[index].date.year}',
+                                    style:
+                                    const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
