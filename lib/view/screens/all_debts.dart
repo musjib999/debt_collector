@@ -155,8 +155,9 @@ class _AllDebtsState extends State<AllDebts> {
                               children: [
                                 Text(
                                   state.debts[index].debtor,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontWeight: FontWeight.w700,
+                                    color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
                                   ),
                                 ),
                                 SizedBox(height: 8.sp),
@@ -217,8 +218,10 @@ class _AllDebtsState extends State<AllDebts> {
                                     children: [
                                       Text(
                                         state.debts[index].debtor,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w700),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                          color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                        ),
                                       ),
                                       SizedBox(height: 8.sp),
                                       Text(
@@ -270,8 +273,10 @@ class _AllDebtsState extends State<AllDebts> {
                               children: [
                                 Text(
                                   state.debts[index].debtor,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w700),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black,
+                                  ),
                                 ),
                                 SizedBox(height: 8.sp),
                                 Text(

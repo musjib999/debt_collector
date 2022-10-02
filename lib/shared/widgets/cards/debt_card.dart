@@ -1,4 +1,5 @@
 import 'package:debt_collector/core/core.dart';
+import 'package:debt_collector/shared/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -11,11 +12,17 @@ class DebtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      color: Colors.blue,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.blue,
+            AppColors.awesomeBlue,
+          ],
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(15.0),
