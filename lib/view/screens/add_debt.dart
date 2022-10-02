@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:debt_collector/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class _AddDebtState extends State<AddDebt> {
               children: [
                 TextFormField(
                   controller: name,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.person_outline),
                     hintText: 'Debtor',
@@ -55,6 +57,7 @@ class _AddDebtState extends State<AddDebt> {
                 const SizedBox(height: 12.0),
                 TextFormField(
                   controller: amount,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.attach_money_outlined),
                     hintText: 'Amount',
@@ -103,6 +106,7 @@ class _AddDebtState extends State<AddDebt> {
                 const SizedBox(height: 12.0),
                 TextFormField(
                   controller: item,
+                  style: TextStyle(color: AdaptiveTheme.of(context).mode == AdaptiveThemeMode.dark ? AppColors.fairlyWhite : Colors.black),
                   decoration: const InputDecoration(
                     prefixIcon: Icon(Icons.card_travel),
                     hintText: 'item',

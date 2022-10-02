@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:debt_collector/index.dart';
 import 'package:debt_collector/view/screens/edit_debt.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,35 @@ class SingleDebt extends StatelessWidget {
             onSelected: (value) {
               if (value == DebtMenuItem.edit) {
                 si.routerService.nextRoute(context, EditDebt(debt: debt));
-              } else
-              if (value == DebtMenuItem.delete) {
+              } else if (value == DebtMenuItem.delete) {
                 si.debtService.deleteDebt(context: context, debt: debt);
               }
             },
             itemBuilder: (context) {
-              return const [
+              return [
                 PopupMenuItem(
                   value: DebtMenuItem.edit,
-                  child: Text('Edit'),
+                  child: Text(
+                    'Edit',
+                    style: TextStyle(
+                        color: AdaptiveTheme.of(context).mode ==
+                                AdaptiveThemeMode.dark
+                            ? AppColors.fairlyWhite
+                            : Colors.black,
+                    ),
+                  ),
                 ),
                 PopupMenuItem(
                   value: DebtMenuItem.delete,
-                  child: Text('Delete'),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(
+                        color: AdaptiveTheme.of(context).mode ==
+                                AdaptiveThemeMode.dark
+                            ? AppColors.fairlyWhite
+                            : Colors.black,
+                    ),
+                  ),
                 ),
               ];
             },
@@ -42,10 +58,11 @@ class SingleDebt extends StatelessWidget {
       ),
       body: BlocListener<DebtBloc, DebtState>(
         listener: (context, state) {
-          if(state is DebtLoaded){
-            if(state.status == DebtStatus.removed){
+          if (state is DebtLoaded) {
+            if (state.status == DebtStatus.removed) {
               si.dialogService.showSuccessSnackBar(
-                  context: context, message: 'Debt Removed successfully',
+                context: context,
+                message: 'Debt Removed successfully',
               );
               si.routerService.popRoute(context);
             }
@@ -58,8 +75,8 @@ class SingleDebt extends StatelessWidget {
             children: [
               Text(
                 debt.debtor,
-                style: const TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.w700),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
               SizedBox(height: 6.h),
               DebtInfoContainer(
